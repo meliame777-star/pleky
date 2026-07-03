@@ -556,9 +556,11 @@
                 alert("Keranjang kamu kosong, rakit dan tambah menu dulu yuk!"); return;
             }
 
+            // PERBAIKAN: Masukkan data ke dashboard Toko Penjual SEBELUM keranjang dikosongkan!
+            tambahKeDashboard(nama, wa);
+            
             alert("Pesanan berhasil dikirim!");
             putarSuaraNotifikasi();
-            tambahKeDashboard(nama, wa);
             
             document.getElementById('cust-name').value = "";
             document.getElementById('cust-wa').value = "";
