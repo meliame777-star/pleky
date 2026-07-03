@@ -212,22 +212,46 @@
             .hero { flex-direction: column-reverse; text-align: center; }
             .hero-img { text-align: center; }
             
-            /* Perbaikan untuk tampilan bar order di HP */
+            /* Tetap melayang di bawah layar HP, tapi rapi & proporsional */
             .order-bar { 
-                position: relative; /* Mengubah dari fixed ke relative agar tidak menutupi konten */
                 flex-direction: column; 
                 text-align: center; 
                 align-items: center; 
-                padding: 20px;
-                margin-top: 20px;
+                padding: 12px 4%; /* Memperkecil padding biar hemat ruang */
+                gap: 8px;
             }
-            .order-form-container { align-items: center; width: 100%; }
-            .order-form { width: 100%; flex-direction: column; gap: 10px; }
-            .order-form input { width: 100%; text-align: center; }
+            .order-info {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                align-items: center;
+                border-bottom: 1px solid #222;
+                padding-bottom: 5px;
+            }
+            .order-info .total-price { font-size: 18px; } /* Sedikit dikecilkan di HP */
+            .order-form-container { align-items: center; width: 100%; gap: 6px; }
             
-            /* Memberikan ruang scroll ekstra di bawah halaman */
+            /* Membuat input nama dan WA berjejer kesamping biar hemat tempat vertikal */
+            .order-form { 
+                width: 100%; 
+                flex-direction: row; 
+                gap: 8px; 
+            }
+            .order-form input { 
+                flex: 1; 
+                padding: 8px; 
+                font-size: 13px; 
+            }
+            .order-form .btn-red { 
+                width: 100%; 
+                justify-content: center; 
+                padding: 10px;
+                font-size: 13px;
+            }
+            
+            /* Memberikan ruang kosong di paling bawah web agar menu utama tidak tertutup bar melayang */
             .cart-summary-section {
-                padding: 0 6% 40px 6%;
+                padding: 0 6% 220px 6%;
             }
         }
     </style>
