@@ -205,7 +205,6 @@
             .hero { flex-direction: column-reverse; text-align: center; }
             .hero-img { text-align: center; }
             
-            /* Bar bawah super tipis ala GoFood/GrabFood */
             .order-bar { 
                 flex-direction: row; 
                 justify-content: space-between;
@@ -310,7 +309,10 @@
         <div id="admin-dashboard-view" class="dashboard-container" style="display: none;">
             <div class="dash-header">
                 <h2>MONITOR PESANAN MASUK</h2>
-                <button class="btn-red" style="padding: 6px 12px; font-size: 12px;" onclick="logoutAdmin()">Keluar</button>
+                <div>
+                    <button class="btn-red" style="padding: 6px 12px; font-size: 12px; background-color: #555; box-shadow: none; margin-right: 10px;" onclick="hapusSemuaPesanan()">Hapus Semua</button>
+                    <button class="btn-red" style="padding: 6px 12px; font-size: 12px;" onclick="logoutAdmin()">Keluar</button>
+                </div>
             </div>
             <table class="dash-table">
                 <thead>
@@ -342,6 +344,7 @@
         let keranjangBelanja = [];
         let clickCount = 0;
         let clickTimer;
+        let dataPesananLokal = JSON.parse(localStorage.getItem('plekyy_orders')) || [];
 
         function logoSecretClick() {
             clickCount++;
@@ -361,6 +364,10 @@
             const targetNav = document.getElementById(`nav-${pageName}`);
             if(targetNav) targetNav.classList.add('active');
             window.scrollTo(0, 0);
+
+            if (pageName === 'admin' && localStorage.getItem('admin_logged') === 'true') {
+                tampilkanDashboardLangsung();
+            }
         }
 
         function renderMenu() {
@@ -437,7 +444,7 @@
             const optSelect = document.getElementById(`opt-${prodId}`);
             const lvlSelect = document.getElementById(`level-${p.id}`);
             const subOptSelect = document.getElementById(`sub-opt-${p.id}`);
-            const qtyInput = document.getElementById(`qty-${p.id}`);
+            const qtyInput = document.getElementById(`qty-${prodId}`);
 
             let qty = parseInt(qtyInput.value) || 1;
             if(qty < 1) qty = 1;
@@ -529,17 +536,6 @@
                 gain1.connect(ctx.destination);
                 osc1.start(ctx.currentTime);
                 osc1.stop(ctx.currentTime + 0.3);
-
-                const osc2 = ctx.createOscillator();
-                const gain2 = ctx.createGain();
-                osc2.type = 'triangle';
-                osc2.frequency.setValueAtTime(1318.51, ctx.currentTime + 0.1);
-                gain2.gain.setValueAtTime(0.4, ctx.currentTime + 0.1);
-                gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-                osc2.connect(gain2);
-                gain2.connect(ctx.destination);
-                osc2.start(ctx.currentTime + 0.1);
-                osc2.stop(ctx.currentTime + 0.5);
             } catch (error) {
                 console.log("Audio Error:", error);
             }
@@ -548,16 +544,34 @@
         function kirimOrderan() {
             const nama = document.getElementById('cust-name').value;
             const wa = document.getElementById('cust-wa').value;
+            const totalBayar = document.getElementById('total-price').innerText;
 
             if(!nama || !wa) {
                 alert("Tolong isi Nama dan nomor WhatsApp kamu dulu ya!"); return;
             }
             if(keranjangBelanja.length === 0) {
-                alert("Keranjang kamu kosong, rakit dan tambah menu dulu yuk!"); return;
+                alert("Keranjang kamu kosong, rakit and tambah menu dulu yuk!"); return;
             }
 
-            // PERBAIKAN: Masukkan data ke dashboard Toko Penjual SEBELUM keranjang dikosongkan!
-            tambahKeDashboard(nama, wa);
+            let itemDetails = keranjangBelanja.map(item => `${item.nama} (${item.jumlah}x)`).join(', ');
+            let formattedWa = wa.trim();
+            if(formattedWa.startsWith('0')) formattedWa = '62' + formattedWa.substring(1);
+
+            // Bikin object pesanan baru
+            const orderBaru = {
+                id: '#00' + (dataPesananLokal.length + 1),
+                nama: nama,
+                wa: formattedWa,
+                items: itemDetails,
+                total: totalBayar
+            };
+
+            // Simpan ke array lokal dan LocalStorage (Anti hilang)
+            dataPesananLokal.push(orderBaru);
+            localStorage.setItem('plekyy_orders', JSON.stringify(dataPesananLokal));
+
+            // Perbarui tabel dashboard admin saat itu juga (Real-time tanpa refresh!)
+            renderTabelDashboard();
             
             alert("Pesanan berhasil dikirim!");
             putarSuaraNotifikasi();
@@ -574,46 +588,66 @@
             const p = document.getElementById('admin-pass').value;
             if(u === "admin_plekyy" && p === "12345") {
                 alert("Selamat datang kembali, Owner Plekyy! 🌶️");
-                document.getElementById('admin-login-view').style.display = 'none';
-                document.getElementById('admin-dashboard-view').style.display = 'block';
+                localStorage.setItem('admin_logged', 'true');
+                tampilkanDashboardLangsung();
             } else {
                 alert("Username atau Password salah!");
             }
         }
 
+        function tampilkanDashboardLangsung() {
+            document.getElementById('admin-login-view').style.display = 'none';
+            document.getElementById('admin-dashboard-view').style.display = 'block';
+            renderTabelDashboard();
+        }
+
+        function renderTabelDashboard() {
+            const tbody = document.getElementById('dashboard-rows');
+            if(!tbody) return;
+            tbody.innerHTML = "";
+
+            if(dataPesananLokal.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#aaa;">Belum ada pesanan masuk.</td></tr>`;
+                return;
+            }
+
+            dataPesananLokal.forEach(order => {
+                const row = `
+                    <tr>
+                        <td>${order.id}</td>
+                        <td><b>${order.nama}</b></td>
+                        <td>
+                            <a href="https://wa.me/${order.wa}?text=Halo%20${order.nama},%20pesanan%20Mie%20Jebew%20kamu%20sedang%20diproses%20ya!%20🌶️" target="_blank" class="btn-wa">
+                                Chat WA
+                            </a>
+                        </td>
+                        <td>${order.items}</td>
+                        <td style="color: var(--accent-gold); font-weight:700;">${order.total}</td>
+                        <td><span class="status-badge">Menunggu Pembayaran</span></td>
+                    </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function hapusSemuaPesanan() {
+            if(confirm("Apakah kamu yakin ingin menghapus semua histori pesanan?")) {
+                dataPesananLokal = [];
+                localStorage.removeItem('plekyy_orders');
+                renderTabelDashboard();
+            }
+        }
+
         function logoutAdmin() {
+            localStorage.removeItem('admin_logged');
             document.getElementById('admin-login-view').style.display = 'block';
             document.getElementById('admin-dashboard-view').style.display = 'none';
             switchPage('beranda');
         }
 
-        let orderIdCounter = 1;
-        function tambahKeDashboard(namaPelanggan, waPelanggan) {
-            const tbody = document.getElementById('dashboard-rows');
-            const totalBayar = document.getElementById('total-price').innerText;
-            
-            let itemDetails = keranjangBelanja.map(item => `${item.nama} (${item.jumlah}x)`).join(', ');
-
-            let formattedWa = waPelanggan.trim();
-            if(formattedWa.startsWith('0')) formattedWa = '62' + formattedWa.substring(1);
-
-            const row = `
-                <tr>
-                    <td>#00${orderIdCounter++}</td>
-                    <td><b>${namaPelanggan}</b></td>
-                    <td>
-                        <a href="https://wa.me/${formattedWa}?text=Halo%20${namaPelanggan},%20pesanan%20Mie%20Jebew%20kamu%20sedang%20diproses%20ya!%20🌶️" target="_blank" class="btn-wa">
-                            Chat WA
-                        </a>
-                    </td>
-                    <td>${itemDetails}</td>
-                    <td style="color: var(--accent-gold); font-weight:700;">${totalBayar}</td>
-                    <td><span class="status-badge">Menunggu Pembayaran</span></td>
-                </tr>`;
-            tbody.innerHTML += row;
-        }
-
-        window.onload = function() { renderMenu(); };
+        window.onload = function() { 
+            renderMenu(); 
+            renderTabelDashboard();
+        };
     </script>
 </body>
 </html>
