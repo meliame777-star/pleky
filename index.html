@@ -211,10 +211,24 @@
         @media (max-width: 768px) {
             .hero { flex-direction: column-reverse; text-align: center; }
             .hero-img { text-align: center; }
-            .order-bar { flex-direction: column; text-align: center; align-items: center; }
+            
+            /* Perbaikan untuk tampilan bar order di HP */
+            .order-bar { 
+                position: relative; /* Mengubah dari fixed ke relative agar tidak menutupi konten */
+                flex-direction: column; 
+                text-align: center; 
+                align-items: center; 
+                padding: 20px;
+                margin-top: 20px;
+            }
             .order-form-container { align-items: center; width: 100%; }
-            .order-form { width: 100%; flex-direction: column; gap: 8px; }
-            .order-form input { width: 100%; }
+            .order-form { width: 100%; flex-direction: column; gap: 10px; }
+            .order-form input { width: 100%; text-align: center; }
+            
+            /* Memberikan ruang scroll ekstra di bawah halaman */
+            .cart-summary-section {
+                padding: 0 6% 40px 6%;
+            }
         }
     </style>
 </head>
