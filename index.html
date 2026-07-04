@@ -125,6 +125,20 @@
         .menu-title-container { text-align: center; margin: 20px 0; padding: 0 4%; }
         .menu-title-container h2 { font-size: 28px; font-weight: 800; color: var(--primary-red); text-shadow: 0 0 10px var(--primary-glow); }
         .menu-title-container p { color: #ccc; font-size: 13px; }
+
+        /* --- FITUR BARU: BOX MENGARAHKAN CARA BELANJA --- */
+        .guide-box {
+            background: linear-gradient(135deg, #111, #1a0500);
+            border-left: 5px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 0 auto 25px auto;
+            max-width: 88%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .guide-title { font-size: 14px; font-weight: 800; color: var(--accent-gold); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .guide-steps { display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: #ddd; list-style-type: none; }
+        .guide-steps li span { color: var(--primary-red); font-weight: bold; }
         
         /* --- KOTAK KERANJANG MURNI DI ATAS MENU --- */
         .cart-summary-section {
@@ -159,11 +173,11 @@
         
         .control-group { margin-bottom: 10px; }
         .control-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 4px; font-weight: 600; }
-        .control-group select, .control-group input[type="number"] {
+        .control-group select, .control-group input[type="number"], .modal-content textarea {
             width: 100%; background-color: #000; color: #fff; border: 1px solid #444;
             padding: 8px; border-radius: 6px; font-size: 13px; outline: none; transition: 0.2s;
         }
-        .control-group select:focus, .control-group input[type="number"]:focus { border-color: var(--primary-red); }
+        .control-group select:focus, .control-group input[type="number"]:focus, .modal-content textarea:focus { border-color: var(--primary-red); }
         .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid #222; }
         .card-footer .price { font-weight: 800; color: #fff; font-size: 15px; }
 
@@ -224,7 +238,7 @@
         .dashboard-container { padding: 20px 6%; overflow-x: auto; }
         .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .dash-header h2 { font-size: 24px; font-weight: 800; color: var(--accent-gold); }
-        .dash-table { width: 100%; border-collapse: collapse; margin-top: 10px; background-color: var(--bg-card); min-width: 800px; }
+        .dash-table { width: 100%; border-collapse: collapse; margin-top: 10px; background-color: var(--bg-card); min-width: 900px; }
         .dash-table th, .dash-table td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
         .dash-table th { background-color: #000; color: var(--primary-red); font-weight: 800; border-bottom: 2px solid var(--primary-red); }
         .status-badge { background-color: #222; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
@@ -237,6 +251,7 @@
             .order-info .total-price { font-size: 16px; }
             .btn-red { padding: 10px 16px; font-size: 12px; }
             .menu-grid { padding: 0 4% 130px 4%; gap: 15px; }
+            .guide-box { max-width: 92%; padding: 12px 15px; }
         }
     </style>
 </head>
@@ -285,6 +300,17 @@
             <p>Atur variasi bumbu, isi jumlah pesanan, masukkan keranjang, lalu kirim sekaligus!</p>
         </div>
 
+        <!-- FITUR BARU: BOX PETUNJUK MENGARAHKAN ALUR PEMBELI -->
+        <div class="guide-box">
+            <div class="guide-title">💡 CARA PESAN DI WEB PLEKYYY WAWW!:</div>
+            <ul class="guide-steps">
+                <li>1️⃣ Pilih variasi menu di kartu produk bawah, lalu klik tombol <span>+ Keranjang</span>.</li>
+                <li>2️⃣ Cek menu pilhanmu yang terkumpul di <span>Keranjang Racikan Kamu</span> (Kotak Hitam di bawah ini).</li>
+                <li>3️⃣ Jika sudah sesuai, klik tombol merah <span>Checkout</span> yang ada di bar bagian paling bawah layar.</li>
+                <li>4️⃣ Isi nama, nomor WA, serta catatan khusus pada formulir melayang, lalu kirim!</li>
+            </ul>
+        </div>
+
         <!-- KERANJANG BELANJA SAJA (TIDAK ADA FORM DISINI) -->
         <div class="cart-summary-section">
             <div class="cart-box">
@@ -305,7 +331,7 @@
         </div>
     </div>
 
-    <!-- POP-UP (MODAL) FORM DATA PEMBELI -->
+    <!-- POP-UP (MODAL) FORM DATA PEMBELI (SUDAH DITAMBAH CATATAN) -->
     <div id="modal-checkout" class="modal-overlay">
         <div class="modal-content">
             <span class="close-modal" onclick="tutupPopupCheckout()">&times;</span>
@@ -319,6 +345,12 @@
             <div class="input-wrapper">
                 <label for="cust-wa">No.wa</label>
                 <input type="number" id="cust-wa" placeholder="Contoh: 08123456789" required>
+            </div>
+            
+            <!-- FITUR BARU: INPUT CATATAN TAMBAHAN -->
+            <div class="input-wrapper">
+                <label for="cust-note">Catatan Tambahan (Opsional)</label>
+                <textarea id="cust-note" rows="3" placeholder="Contoh: Gak pake daun bawang / Level 5 pedes beneran ya kak..." style="resize: none;"></textarea>
             </div>
             
             <!-- TOMBOL KIRIM PESANAN BENERAN ADA DI SINI -->
@@ -347,6 +379,7 @@
                         <th>Pelanggan</th>
                         <th>Kontak (WA)</th>
                         <th>Detail Pesanan Masuk</th>
+                        <th>Catatan Khusus</th>
                         <th>Total Pembayaran</th>
                         <th>Status</th>
                     </tr>
@@ -557,7 +590,6 @@
             document.getElementById('total-price').innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
         }
 
-        // FUNGSI UNTUK MEMBUKA DAN MENUTUP POP-UP CHECKOUT
         function bukaPopupCheckout() {
             if (keranjangBelanja.length === 0) {
                 alert("Keranjang kamu masih kosong nih, rakit dan tambah menu dulu yuk!");
@@ -591,6 +623,7 @@
         function kirimOrderan() {
             const nama = document.getElementById('cust-name').value;
             const wa = document.getElementById('cust-wa').value;
+            const catatan = document.getElementById('cust-note').value || "-";
             const totalBayar = document.getElementById('total-price').innerText;
 
             if(!nama || !wa) {
@@ -609,6 +642,7 @@
                 nama: nama,
                 wa: formattedWa,
                 items: itemDetails,
+                note: catatan, // Menyertakan data catatan ke server
                 total: totalBayar
             };
 
@@ -617,12 +651,14 @@
                 body: JSON.stringify(payload)
             })
             .then(res => {
-                alert("Pesanan kamu berhasil terkirim! Silakan tunggu konfirmasi penjual.");
+                // Generate format pesan teks rapi untuk dikirim ke chat WA owner juga (jika dibutuhkan oleh pembeli)
+                alert("Pesanan kamu berhasil terkirim ke sistem! Silakan tunggu konfirmasi penjual.");
                 document.getElementById('cust-name').value = "";
                 document.getElementById('cust-wa').value = "";
+                document.getElementById('cust-note').value = "";
                 keranjangBelanja = [];
                 updateTampilanKeranjang();
-                tutupPopupCheckout(); // Tutup popup setelah berhasil kirim
+                tutupPopupCheckout();
             })
             .catch(err => {
                 alert("Ada gangguan jaringan, pastikan server Google Sheets sudah benar.");
@@ -670,11 +706,13 @@
                 }
 
                 if(data.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#aaa;">Belum ada pesanan masuk.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#aaa;">Belum ada pesanan masuk.</td></tr>`;
                     return;
                 }
 
                 data.reverse().forEach((order, idx) => {
+                    // Jika data catatan kosong dari server lama, set default strip
+                    const txtNote = order.note ? order.note : "-";
                     const row = `
                         <tr>
                             <td>#00${data.length - idx}</td>
@@ -685,6 +723,7 @@
                                 </a>
                             </td>
                             <td>${order.items}</td>
+                            <td style="color:#ffcc00; font-style:italic; font-size:13px;">${txtNote}</td>
                             <td style="color: var(--accent-gold); font-weight:700;">${order.total}</td>
                             <td><span class="status-badge">Menunggu Pembayaran</span></td>
                         </tr>`;
