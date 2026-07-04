@@ -153,7 +153,7 @@
         .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px; border-top: 1px solid #222; }
         .card-footer .price { font-weight: 800; color: #fff; font-size: 16px; }
 
-        /* --- STICKY CART & IN-LINE FORM VIEW --- */
+        /* --- STICKY CART VIEW --- */
         .cart-summary-section {
             padding: 0 6% 180px 6%;
             margin-top: 20px;
@@ -164,18 +164,26 @@
         .cart-box h3 { font-size: 18px; color: var(--accent-gold); margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 5px; }
         .cart-item-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 8px 0; border-bottom: 1px dashed #222; }
         .btn-delete { background: none; border: none; color: var(--primary-red); cursor: pointer; font-weight: bold; font-size: 12px; }
-        .wa-notice { font-size: 11px; color: var(--accent-gold); font-weight: 600; text-shadow: 0 0 5px var(--gold-glow); }
 
-        /* --- STICKY ORDER BAR (MINIMALIST) --- */
+        /* --- STICKY ORDER BAR --- */
         .order-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; background-color: #000;
             border-top: 3px solid var(--primary-red); padding: 15px 6%; display: flex;
             justify-content: space-between; align-items: center; z-index: 90; box-shadow: 0 0 20px var(--primary-glow);
+            flex-wrap: wrap; gap: 10px;
         }
-        .order-info { flex: 1; }
+        .order-info { flex: 1; min-width: 150px; }
         .order-info .total-items { font-size: 13px; color: #aaa; }
         .order-info .total-price { font-size: 22px; font-weight: 800; color: var(--primary-red); text-shadow: 0 0 10px var(--primary-glow); }
-        .order-form-container { display: flex; align-items: center; }
+        
+        .order-form-container { display: flex; flex-direction: column; gap: 4px; }
+        .wa-notice { font-size: 11px; color: var(--accent-gold); font-weight: 600; text-shadow: 0 0 5px var(--gold-glow); }
+        .order-form { display: flex; gap: 12px; }
+        .order-form input {
+            background-color: #111; border: 1px solid #444; color: #fff;
+            padding: 10px 15px; border-radius: 8px; font-size: 14px; width: 180px; outline: none;
+        }
+        .order-form input:focus { border-color: var(--primary-red); }
 
         /* --- PAGE: LOGIN & DASHBOARD --- */
         .login-box {
@@ -200,31 +208,15 @@
         .dash-table th { background-color: #000; color: var(--primary-red); font-weight: 800; border-bottom: 2px solid var(--primary-red); }
         .status-badge { background-color: #222; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
 
-        /* --- RESPONSIVE PHONE FIXES --- */
         @media (max-width: 768px) {
             .hero { flex-direction: column-reverse; text-align: center; }
             .hero-img { text-align: center; }
-            
-            .order-bar { 
-                flex-direction: row; 
-                justify-content: space-between;
-                align-items: center; 
-                padding: 10px 5%;
-                height: 75px;
-            }
-            .order-info { text-align: left; }
-            .order-info .total-price { font-size: 18px; }
-            .order-form-container { width: auto; }
-            #btn-langkah-isi { padding: 10px 16px; font-size: 13px; }
-            
-            .cart-summary-section {
-                padding: 0 6% 130px 6%;
-            }
+            .order-bar { flex-direction: column; text-align: center; align-items: center; }
+            .order-form-container { align-items: center; width: 100%; }
+            .order-form { width: 100%; flex-direction: column; gap: 8px; }
+            .order-form input { width: 100%; }
         }
     </style>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
@@ -276,16 +268,7 @@
         <div class="cart-summary-section">
             <div class="cart-box">
                 <h3>🛒 Keranjang Racikan Kamu:</h3>
-                <div id="cart-items-list" style="color: #ccc; font-size: 13px; margin-bottom: 20px;"> Belum ada item yang ditambahkan ke keranjang. </div>
-                
-                <div id="form-pesanan-utama" style="border-top: 1px solid #222; padding-top: 15px; margin-top: 15px;">
-                    <div class="wa-notice" style="margin-bottom: 12px;">⚠️ Wajib isi nomor WhatsApp aktif untuk konfirmasi proses & pengambilan pesanan!</div>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <input type="text" id="cust-name" placeholder="Nama Kamu" style="background-color: #111; border: 1px solid #444; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px; width: 100%; outline: none;" required>
-                        <input type="number" id="cust-wa" placeholder="No WA (Cth: 0812...)" style="background-color: #111; border: 1px solid #444; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px; width: 100%; outline: none;" required>
-                        <button class="btn-red" style="width: 100%; justify-content: center; padding: 12px;" onclick="kirimOrderan()">Kirim Pesanan Sekarang</button>
-                    </div>
-                </div>
+                <div id="cart-items-list" style="color: #ccc; font-size: 13px;"> Belum ada item yang ditambahkan ke keranjang. </div>
             </div>
         </div>
 
@@ -295,7 +278,12 @@
                 <div class="total-price" id="total-price">Rp 0</div>
             </div>
             <div class="order-form-container">
-                <button class="btn-red" id="btn-langkah-isi" onclick="fokusFormPesanan()">Isi Data Diri ↓</button>
+                <div class="wa-notice">⚠️ Wajib isi nomor WhatsApp aktif untuk konfirmasi proses & pengambilan pesanan!</div>
+                <div class="order-form">
+                    <input type="text" id="cust-name" placeholder="Nama Kamu" required>
+                    <input type="number" id="cust-wa" placeholder="No WA (Cth: 0812...)" required>
+                    <button class="btn-red" id="btn-kirim" onclick="kirimOrderan()">Kirim Pesanan</button>
+                </div>
             </div>
         </div>
     </div>
@@ -312,10 +300,7 @@
         <div id="admin-dashboard-view" class="dashboard-container" style="display: none;">
             <div class="dash-header">
                 <h2>MONITOR PESANAN MASUK</h2>
-                <div>
-                    <button class="btn-red" style="padding: 6px 12px; font-size: 12px; background-color: #555; box-shadow: none; margin-right: 10px;" onclick="hapusSemuaPesanan()">Hapus Semua</button>
-                    <button class="btn-red" style="padding: 6px 12px; font-size: 12px;" onclick="logoutAdmin()">Keluar</button>
-                </div>
+                <button class="btn-red" style="padding: 6px 12px; font-size: 12px;" onclick="logoutAdmin()">Keluar</button>
             </div>
             <table class="dash-table">
                 <thead>
@@ -334,18 +319,8 @@
     </div>
 
     <script>
-        // SERVER DATABASE OTOMATIS SUDAH DISIAPKAN SIAP PAKAI!
-        const firebaseConfig = {
-            apiKey: "AIzaSyAsbG45NjcwM2I5Njc4OTAxMmI0NTY3ODkwMTJiNDU2Nzg=",
-            authDomain: "plekyywaww-demo.firebaseapp.com",
-            databaseURL: "https://plekyywaww-demo-default-rtdb.asia-southeast1.firebasedatabase.app/",
-            projectId: "plekyywaww-demo",
-            storageBucket: "plekyywaww-demo.appspot.com",
-            appId: "1:1234567890:web:a1b2c3d4e5f6g7h8i9j0"
-        };
-        
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        // PASTEKAN URL SPREADSHEET APPS SCRIPT KAMU DI SINI
+        const URL_SERVER = "https://script.google.com/macros/s/AKfycbxW4ECGwsG8glyu_X4cwRC1rH45v9ukEuP1TEsrsLC4TdHtNtByC5ly7wVpKuvNJGqLAg/exec";
 
         const listProduk = [
             { id: 1, nama: "Mie Jebew Gila", hargaBase: 10000, gambar: "img/jebew.jpg", desc: "Mie khas pedas manis basah dengan minyak cabai melimpah.", optLabel: "Spesial Topping", options: [{ text: "Tanpa Topping", hargaTambah: 0 }, { text: "Sosis (+Rp 2.000)", hargaTambah: 2000 }, { text: "Bakso (+Rp 3.000)", hargaTambah: 3000 }, { text: "Pangsit (+Rp 3.000)", hargaTambah: 3000 }], level: true, type: "normal" },
@@ -379,9 +354,10 @@
             const targetNav = document.getElementById(`nav-${pageName}`);
             if(targetNav) targetNav.classList.add('active');
             window.scrollTo(0, 0);
-
             if (pageName === 'admin' && localStorage.getItem('admin_logged') === 'true') {
-                tampilkanDashboardLangsung();
+                document.getElementById('admin-login-view').style.display = 'none';
+                document.getElementById('admin-dashboard-view').style.display = 'block';
+                ambilDataTerbaru();
             }
         }
 
@@ -456,10 +432,10 @@
 
         function tambahKeKeranjang(prodId) {
             const p = listProduk.find(prod => prod.id === prodId);
-            const optSelect = document.getElementById('opt-' + prodId);
-            const lvlSelect = document.getElementById('level-' + p.id);
-            const subOptSelect = document.getElementById('sub-opt-' + p.id);
-            const qtyInput = document.getElementById('qty-' + prodId);
+            const optSelect = document.getElementById(`opt-${prodId}`);
+            const lvlSelect = document.getElementById(`level-${p.id}`);
+            const subOptSelect = document.getElementById(`sub-opt-${p.id}`);
+            const qtyInput = document.getElementById(`qty-${prodId}`);
 
             let qty = parseInt(qtyInput.value) || 1;
             if(qty < 1) qty = 1;
@@ -530,126 +506,95 @@
             document.getElementById('total-price').innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
         }
 
-        function fokusFormPesanan() {
-            document.getElementById('form-pesanan-utama').scrollIntoView({ behavior: 'smooth' });
-            document.getElementById('cust-name').focus();
-        }
-
         function putarSuaraNotifikasi() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 if (!AudioContext) return;
                 const ctx = new AudioContext();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, ctx.currentTime);
-                gain.gain.setValueAtTime(0.3, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.4);
-            } catch (e) {}
+                const osc1 = ctx.createOscillator();
+                const gain1 = ctx.createGain();
+                osc1.type = 'triangle';
+                osc1.frequency.setValueAtTime(987.77, ctx.currentTime);
+                gain1.gain.setValueAtTime(0.4, ctx.currentTime);
+                gain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                osc1.connect(gain1);
+                gain1.connect(ctx.destination);
+                osc1.start(ctx.currentTime);
+                osc1.stop(ctx.currentTime + 0.3);
+
+                const osc2 = ctx.createOscillator();
+                const gain2 = ctx.createGain();
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(1318.51, ctx.currentTime + 0.1);
+                gain2.gain.setValueAtTime(0.4, ctx.currentTime + 0.1);
+                gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+                osc2.connect(gain2);
+                gain2.connect(ctx.destination);
+                osc2.start(ctx.currentTime + 0.1);
+                osc2.stop(ctx.currentTime + 0.5);
+            } catch (error) {}
         }
 
+        // PEMBELI TINGGAL KLIK TANPA BUKA WA! DATA LANGSUNG TEMBUS KE EXCEL / DASHBOARD ADMIN
         function kirimOrderan() {
             const nama = document.getElementById('cust-name').value;
             const wa = document.getElementById('cust-wa').value;
             const totalBayar = document.getElementById('total-price').innerText;
 
             if(!nama || !wa) {
-                alert("Tolong isi Nama dan nomor WhatsApp dulu!"); return;
+                alert("Tolong isi Nama dan nomor WhatsApp kamu dulu ya!"); return;
             }
             if(keranjangBelanja.length === 0) {
-                alert("Keranjang belanja kamu masih kosong!"); return;
+                alert("Keranjang kamu kosong, rakit dan tambah menu dulu yuk!"); return;
             }
+
+            const btn = document.getElementById('btn-kirim');
+            btn.innerText = "Mengirim...";
+            btn.disabled = true;
 
             let itemDetails = keranjangBelanja.map(item => `${item.nama} (${item.jumlah}x)`).join(', ');
             let formattedWa = wa.trim();
             if(formattedWa.startsWith('0')) formattedWa = '62' + formattedWa.substring(1);
 
-            const orderBaru = {
+            const payload = {
                 nama: nama,
                 wa: formattedWa,
                 items: itemDetails,
-                total: totalBayar,
-                waktu: Date.now()
+                total: totalBayar
             };
 
-            // KIRIM DATA KE CLOUD ONLINE SERVER
-            database.ref('pesanan').push(orderBaru)
-                .then(() => {
-                    alert("Pesanan kamu berhasil dikirim!");
-                    document.getElementById('cust-name').value = "";
-                    document.getElementById('cust-wa').value = "";
-                    keranjangBelanja = [];
-                    updateTampilanKeranjang();
-                })
-                .catch(() => {
-                    alert("Gagal mengirim pesanan, cek koneksi internet.");
-                });
+            // Tembak langsung data ke Google Spreadsheet server tanpa lewat WA pembeli
+            fetch(URL_SERVER, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            })
+            .then(res => {
+                alert("Pesanan kamu berhasil terkirim! Silakan tunggu konfirmasi penjual.");
+                document.getElementById('cust-name').value = "";
+                document.getElementById('cust-wa').value = "";
+                keranjangBelanja = [];
+                updateTampilanKeranjang();
+            })
+            .catch(err => {
+                alert("Ada gangguan jaringan, pastikan setelan langkah server Google Sheets sudah benar.");
+            })
+            .finally(() => {
+                btn.innerText = "Kirim Pesanan";
+                btn.disabled = false;
+            });
         }
 
         function prosesLogin() {
             const u = document.getElementById('admin-user').value;
             const p = document.getElementById('admin-pass').value;
             if(u === "admin_plekyy" && p === "12345") {
-                alert("Selamat datang Owner Plekyy! 🌶️");
+                alert("Selamat datang kembali, Owner Plekyy! 🌶️");
                 localStorage.setItem('admin_logged', 'true');
-                tampilkanDashboardLangsung();
+                document.getElementById('admin-login-view').style.display = 'none';
+                document.getElementById('admin-dashboard-view').style.display = 'block';
+                ambilDataTerbaru();
             } else {
                 alert("Username atau Password salah!");
-            }
-        }
-
-        function tampilkanDashboardLangsung() {
-            document.getElementById('admin-login-view').style.display = 'none';
-            document.getElementById('admin-dashboard-view').style.display = 'block';
-        }
-
-        // AKSI REAL-TIME: PENGAWAS OTOMATIS TANPA REFRESH
-        function listenPesananMasuk() {
-            database.ref('pesanan').orderByChild('waktu').on('value', (snapshot) => {
-                const tbody = document.getElementById('dashboard-rows');
-                if(!tbody) return;
-                tbody.innerHTML = "";
-
-                let counter = 1;
-                let hasData = false;
-
-                snapshot.forEach((childSnapshot) => {
-                    hasData = true;
-                    const order = childSnapshot.val();
-                    
-                    const row = `
-                        <tr>
-                            <td>#00${counter++}</td>
-                            <td><b>${order.nama}</b></td>
-                            <td>
-                                <a href="https://wa.me/${order.wa}?text=Halo%20${order.nama},%20pesanan%20kamu%20sedang%20diproses%20ya!%20🌶️" target="_blank" class="btn-wa">
-                                    Chat WA
-                                </a>
-                            </td>
-                            <td>${order.items}</td>
-                            <td style="color: var(--accent-gold); font-weight:700;">${order.total}</td>
-                            <td><span class="status-badge">Menunggu Pembayaran</span></td>
-                        </tr>`;
-                    // Tampilkan pesanan terbaru di baris paling atas tabel admin
-                    tbody.innerHTML = row + tbody.innerHTML;
-                });
-
-                if (!hasData) {
-                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#aaa;">Belum ada pesanan masuk.</td></tr>`;
-                } else {
-                    putarSuaraNotifikasi(); // Bunyi ting! tiap ada pesanan baru masuk
-                }
-            });
-        }
-
-        function hapusSemuaPesanan() {
-            if(confirm("Hapus semua pesanan dari server?")) {
-                database.ref('pesanan').set(null);
             }
         }
 
@@ -660,10 +605,50 @@
             switchPage('beranda');
         }
 
-        window.onload = function() { 
-            renderMenu(); 
-            listenPesananMasuk();
-        };
+        let totalDataLama = 0;
+        function ambilDataTerbaru() {
+            if(document.getElementById('admin-dashboard-view').style.display === 'none') return;
+
+            fetch(URL_SERVER)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.getElementById('dashboard-rows');
+                tbody.innerHTML = "";
+                
+                if(data.length > totalDataLama) {
+                    if(totalDataLama > 0) putarSuaraNotifikasi(); // Bunyi Ting-ting! kalau ada baris baru masuk
+                    totalDataLama = data.length;
+                }
+
+                if(data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#aaa;">Belum ada pesanan masuk.</td></tr>`;
+                    return;
+                }
+
+                // Tampilkan dari data paling baru (bawah Excel ditaruh paling atas tabel)
+                data.reverse().forEach((order, idx) => {
+                    const row = `
+                        <tr>
+                            <td>#00${data.length - idx}</td>
+                            <td><b>${order.nama}</b></td>
+                            <td>
+                                <a href="https://wa.me/${order.wa}?text=Halo%20${order.nama},%20pesanan%20Mie%20Jebew%20kamu%20sedang%20diproses%20ya!%20🌶️" target="_blank" class="btn-wa">
+                                    Chat Pembeli
+                                </a>
+                            </td>
+                            <td>${order.items}</td>
+                            <td style="color: var(--accent-gold); font-weight:700;">${order.total}</td>
+                            <td><span class="status-badge">Menunggu Pembayaran</span></td>
+                        </tr>`;
+                    tbody.innerHTML += row;
+                });
+            });
+        }
+
+        // Cek pesanan baru dari Google Sheets setiap 5 detik secara otomatis di layar admin
+        setInterval(ambilDataTerbaru, 5000);
+
+        window.onload = function() { renderMenu(); };
     </script>
 </body>
 </html>
