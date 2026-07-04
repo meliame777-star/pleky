@@ -153,38 +153,55 @@
         .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px; border-top: 1px solid #222; }
         .card-footer .price { font-weight: 800; color: #fff; font-size: 16px; }
 
-        /* --- STICKY CART VIEW --- */
+        /* --- SECTION: KERANJANG & FORM DATA (DIATAS FOOTER / TIDAK MELAYANG) --- */
         .cart-summary-section {
-            padding: 0 6% 180px 6%;
-            margin-top: 20px;
+            padding: 0 6% 120px 6%; /* Memberikan jarak bawah agar tidak tertutup sticky bar */
+            margin-top: 30px;
         }
         .cart-box {
-            background-color: #000; border: 2px solid #222; border-radius: 12px; padding: 20px;
+            background-color: #000; border: 2px solid var(--primary-red); border-radius: 12px; padding: 25px;
+            box-shadow: 0 0 15px rgba(255, 42, 0, 0.2);
         }
         .cart-box h3 { font-size: 18px; color: var(--accent-gold); margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 5px; }
-        .cart-item-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 8px 0; border-bottom: 1px dashed #222; }
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 10px 0; border-bottom: 1px dashed #222; }
         .btn-delete { background: none; border: none; color: var(--primary-red); cursor: pointer; font-weight: bold; font-size: 12px; }
 
-        /* --- STICKY ORDER BAR --- */
-        .order-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; background-color: #000;
-            border-top: 3px solid var(--primary-red); padding: 15px 6%; display: flex;
-            justify-content: space-between; align-items: center; z-index: 90; box-shadow: 0 0 20px var(--primary-glow);
-            flex-wrap: wrap; gap: 10px;
+        /* AREA INPUT IDENTITAS PEMBELI DI DALAM KOTAK BIASA (TIDAK MELAYANG) */
+        .cust-identity-form {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #222;
         }
-        .order-info { flex: 1; min-width: 150px; }
-        .order-info .total-items { font-size: 13px; color: #aaa; }
-        .order-info .total-price { font-size: 22px; font-weight: 800; color: var(--primary-red); text-shadow: 0 0 10px var(--primary-glow); }
-        
-        .order-form-container { display: flex; flex-direction: column; gap: 4px; }
-        .wa-notice { font-size: 11px; color: var(--accent-gold); font-weight: 600; text-shadow: 0 0 5px var(--gold-glow); }
-        .order-form { display: flex; gap: 12px; }
-        .order-form input {
-            background-color: #111; border: 1px solid #444; color: #fff;
-            padding: 10px 15px; border-radius: 8px; font-size: 14px; width: 180px; outline: none;
+        .cust-identity-form h4 { font-size: 14px; color: var(--accent-gold); margin-bottom: 12px; }
+        .form-inputs-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
         }
-        .order-form input:focus { border-color: var(--primary-red); }
+        .form-inputs-group input {
+            flex: 1;
+            min-width: 240px;
+            background-color: #0d0d0d;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+        .form-inputs-group input:focus { border-color: var(--primary-red); box-shadow: 0 0 10px rgba(255,42,0,0.3); }
 
+        /* --- STICKY ORDER BAR (MELAYANG SUPER TIPIS & MINIMALIS) --- */
+        .order-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(5px); border-top: 2px solid var(--primary-red); padding: 12px 6%; 
+            display: flex; justify-content: space-between; align-items: center; z-index: 999; 
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
+        }
+        .order-info { display: flex; flex-direction: column; }
+        .order-info .total-items { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
+        .order-info .total-price { font-size: 20px; font-weight: 800; color: var(--primary-red); text-shadow: 0 0 10px var(--primary-glow); }
+        
         /* --- PAGE: LOGIN & DASHBOARD --- */
         .login-box {
             max-width: 360px; margin: 80px auto; background-color: var(--bg-card);
@@ -211,10 +228,9 @@
         @media (max-width: 768px) {
             .hero { flex-direction: column-reverse; text-align: center; }
             .hero-img { text-align: center; }
-            .order-bar { flex-direction: column; text-align: center; align-items: center; }
-            .order-form-container { align-items: center; width: 100%; }
-            .order-form { width: 100%; flex-direction: column; gap: 8px; }
-            .order-form input { width: 100%; }
+            .order-bar { padding: 10px 5%; }
+            .order-info .total-price { font-size: 18px; }
+            .btn-red { padding: 10px 18px; font-size: 13px; }
         }
     </style>
 </head>
@@ -269,6 +285,14 @@
             <div class="cart-box">
                 <h3>🛒 Keranjang Racikan Kamu:</h3>
                 <div id="cart-items-list" style="color: #ccc; font-size: 13px;"> Belum ada item yang ditambahkan ke keranjang. </div>
+                
+                <div class="cust-identity-form">
+                    <h4>📝 Data Informasi Pembeli:</h4>
+                    <div class="form-inputs-group">
+                        <input type="text" id="cust-name" placeholder="Masukkan Nama Kamu..." required>
+                        <input type="number" id="cust-wa" placeholder="No WhatsApp Aktif (Cth: 0812...)" required>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -277,14 +301,7 @@
                 <div class="total-items" id="total-items">0 Item Terpilih</div>
                 <div class="total-price" id="total-price">Rp 0</div>
             </div>
-            <div class="order-form-container">
-                <div class="wa-notice">⚠️ Wajib isi nomor WhatsApp aktif untuk konfirmasi proses & pengambilan pesanan!</div>
-                <div class="order-form">
-                    <input type="text" id="cust-name" placeholder="Nama Kamu" required>
-                    <input type="number" id="cust-wa" placeholder="No WA (Cth: 0812...)" required>
-                    <button class="btn-red" id="btn-kirim" onclick="kirimOrderan()">Kirim Pesanan</button>
-                </div>
-            </div>
+            <button class="btn-red" id="btn-kirim" onclick="kirimOrderan()">Kirim Pesanan</button>
         </div>
     </div>
 
@@ -535,14 +552,13 @@
             } catch (error) {}
         }
 
-        // PEMBELI TINGGAL KLIK TANPA BUKA WA! DATA LANGSUNG TEMBUS KE EXCEL / DASHBOARD ADMIN
         function kirimOrderan() {
             const nama = document.getElementById('cust-name').value;
             const wa = document.getElementById('cust-wa').value;
             const totalBayar = document.getElementById('total-price').innerText;
 
             if(!nama || !wa) {
-                alert("Tolong isi Nama dan nomor WhatsApp kamu dulu ya!"); return;
+                alert("Tolong isi Nama dan nomor WhatsApp kamu di kolom keranjang dulu ya!"); return;
             }
             if(keranjangBelanja.length === 0) {
                 alert("Keranjang kamu kosong, rakit dan tambah menu dulu yuk!"); return;
@@ -563,7 +579,6 @@
                 total: totalBayar
             };
 
-            // Tembak langsung data ke Google Spreadsheet server tanpa lewat WA pembeli
             fetch(URL_SERVER, {
                 method: "POST",
                 body: JSON.stringify(payload)
@@ -616,7 +631,7 @@
                 tbody.innerHTML = "";
                 
                 if(data.length > totalDataLama) {
-                    if(totalDataLama > 0) putarSuaraNotifikasi(); // Bunyi Ting-ting! kalau ada baris baru masuk
+                    if(totalDataLama > 0) putarSuaraNotifikasi();
                     totalDataLama = data.length;
                 }
 
@@ -625,7 +640,6 @@
                     return;
                 }
 
-                // Tampilkan dari data paling baru (bawah Excel ditaruh paling atas tabel)
                 data.reverse().forEach((order, idx) => {
                     const row = `
                         <tr>
@@ -645,7 +659,6 @@
             });
         }
 
-        // Cek pesanan baru dari Google Sheets setiap 5 detik secara otomatis di layar admin
         setInterval(ambilDataTerbaru, 5000);
 
         window.onload = function() { renderMenu(); };
