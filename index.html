@@ -64,7 +64,7 @@
         }
 
         /* --- MULTI-PAGE CONTROLLER --- */
-        .page { display: none; padding-top: 100px; min-height: 100vh; }
+        .page { display: none; padding-top: 90px; min-height: 100vh; }
         .page.active-page { display: block; }
 
         /* --- BUTTONS & GLOW EFFECTS --- */
@@ -122,76 +122,52 @@
         .promo-details p { color: #bbb; font-size: 13px; margin-bottom: 15px; line-height: 1.5; }
 
         /* --- PAGE: MENU --- */
-        .menu-title-container { text-align: center; margin: 30px 0; }
-        .menu-title-container h2 { font-size: 32px; font-weight: 800; color: var(--primary-red); text-shadow: 0 0 10px var(--primary-glow); }
-        .menu-title-container p { color: #ccc; font-size: 14px; }
+        .menu-title-container { text-align: center; margin: 20px 0; padding: 0 4%; }
+        .menu-title-container h2 { font-size: 28px; font-weight: 800; color: var(--primary-red); text-shadow: 0 0 10px var(--primary-glow); }
+        .menu-title-container p { color: #ccc; font-size: 13px; }
         
+        /* --- KOTAK KERANJANG MURNI DI ATAS MENU --- */
+        .cart-summary-section {
+            padding: 0 6%;
+            margin-bottom: 30px;
+        }
+        .cart-box {
+            background-color: #000; border: 2px solid var(--primary-red); border-radius: 12px; padding: 20px;
+            box-shadow: 0 0 15px rgba(255, 42, 0, 0.2);
+        }
+        .cart-box h3 { font-size: 16px; color: var(--accent-gold); margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 10px 0; border-bottom: 1px dashed #222; }
+        .btn-delete { background: none; border: none; color: var(--primary-red); cursor: pointer; font-weight: bold; font-size: 12px; }
+
+        /* GRID MENU MAKANAN */
         .menu-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px; padding: 0 6% 20px 6%;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px; padding: 0 6% 120px 6%;
         }
         .menu-card {
             background-color: var(--bg-card); border: 2px solid var(--border-color);
-            border-radius: 12px; padding: 20px; display: flex; flex-direction: column; 
+            border-radius: 12px; padding: 18px; display: flex; flex-direction: column; 
             justify-content: space-between; transition: 0.3s;
         }
         .menu-card:hover {
             border-color: var(--primary-red); box-shadow: 0 0 15px var(--primary-glow);
             transform: translateY(-5px);
         }
-        .menu-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
-        .menu-card h3 { font-size: 18px; margin-bottom: 6px; color: var(--accent-gold); }
-        .menu-card .desc { color: #bbb; font-size: 12px; min-height: 36px; margin-bottom: 15px; line-height: 1.4; }
+        .menu-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
+        .menu-card h3 { font-size: 17px; margin-bottom: 4px; color: var(--accent-gold); }
+        .menu-card .desc { color: #bbb; font-size: 12px; min-height: 36px; margin-bottom: 12px; line-height: 1.4; }
         
-        .control-group { margin-bottom: 12px; }
+        .control-group { margin-bottom: 10px; }
         .control-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 4px; font-weight: 600; }
         .control-group select, .control-group input[type="number"] {
             width: 100%; background-color: #000; color: #fff; border: 1px solid #444;
             padding: 8px; border-radius: 6px; font-size: 13px; outline: none; transition: 0.2s;
         }
         .control-group select:focus, .control-group input[type="number"]:focus { border-color: var(--primary-red); }
-        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px; border-top: 1px solid #222; }
-        .card-footer .price { font-weight: 800; color: #fff; font-size: 16px; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid #222; }
+        .card-footer .price { font-weight: 800; color: #fff; font-size: 15px; }
 
-        /* --- SECTION: KERANJANG & FORM DATA (DIATAS FOOTER / TIDAK MELAYANG) --- */
-        .cart-summary-section {
-            padding: 0 6% 120px 6%; /* Memberikan jarak bawah agar tidak tertutup sticky bar */
-            margin-top: 30px;
-        }
-        .cart-box {
-            background-color: #000; border: 2px solid var(--primary-red); border-radius: 12px; padding: 25px;
-            box-shadow: 0 0 15px rgba(255, 42, 0, 0.2);
-        }
-        .cart-box h3 { font-size: 18px; color: var(--accent-gold); margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 5px; }
-        .cart-item-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 10px 0; border-bottom: 1px dashed #222; }
-        .btn-delete { background: none; border: none; color: var(--primary-red); cursor: pointer; font-weight: bold; font-size: 12px; }
-
-        /* AREA INPUT IDENTITAS PEMBELI DI DALAM KOTAK BIASA (TIDAK MELAYANG) */
-        .cust-identity-form {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 2px solid #222;
-        }
-        .cust-identity-form h4 { font-size: 14px; color: var(--accent-gold); margin-bottom: 12px; }
-        .form-inputs-group {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .form-inputs-group input {
-            flex: 1;
-            min-width: 240px;
-            background-color: #0d0d0d;
-            border: 1px solid #444;
-            color: #fff;
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-        }
-        .form-inputs-group input:focus { border-color: var(--primary-red); box-shadow: 0 0 10px rgba(255,42,0,0.3); }
-
-        /* --- STICKY ORDER BAR (MELAYANG SUPER TIPIS & MINIMALIS) --- */
+        /* --- STICKY ORDER BAR --- */
         .order-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; background-color: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(5px); border-top: 2px solid var(--primary-red); padding: 12px 6%; 
@@ -200,8 +176,36 @@
         }
         .order-info { display: flex; flex-direction: column; }
         .order-info .total-items { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
-        .order-info .total-price { font-size: 20px; font-weight: 800; color: var(--primary-red); text-shadow: 0 0 10px var(--primary-glow); }
+        .order-info .total-price { font-size: 18px; font-weight: 800; color: var(--primary-red); text-shadow: 0 0 10px var(--primary-glow); }
         
+        /* --- MODAL POP-UP FORM PEMBELI --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-content {
+            background-color: var(--bg-card); border: 2px solid var(--primary-red);
+            border-radius: 12px; padding: 25px; width: 90%; max-width: 400px;
+            position: relative; box-shadow: 0 0 25px var(--primary-glow);
+            text-align: left;
+        }
+        .close-modal {
+            position: absolute; top: 12px; right: 18px; font-size: 28px;
+            color: var(--text-muted); cursor: pointer; font-weight: bold;
+        }
+        .close-modal:hover { color: var(--primary-red); }
+        .modal-content h3 { font-size: 18px; color: var(--accent-gold); margin-bottom: 5px; }
+        .modal-content p { font-size: 12px; color: #bbb; margin-bottom: 20px; }
+        
+        .modal-content .input-wrapper { margin-bottom: 15px; }
+        .modal-content label { font-size: 12px; color: #aaa; font-weight: 600; display: block; margin-bottom: 6px; }
+        .modal-content input {
+            width: 100%; background-color: #000; border: 1px solid #444; color: #fff;
+            padding: 12px; border-radius: 8px; font-size: 14px; outline: none;
+        }
+        .modal-content input:focus { border-color: var(--primary-red); box-shadow: 0 0 10px rgba(255,42,0,0.3); }
+
         /* --- PAGE: LOGIN & DASHBOARD --- */
         .login-box {
             max-width: 360px; margin: 80px auto; background-color: var(--bg-card);
@@ -226,11 +230,13 @@
         .status-badge { background-color: #222; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
 
         @media (max-width: 768px) {
-            .hero { flex-direction: column-reverse; text-align: center; }
+            .hero { flex-direction: column-reverse; text-align: center; padding: 20px 4%; }
+            .hero-text h1 { font-size: 32px; }
             .hero-img { text-align: center; }
             .order-bar { padding: 10px 5%; }
-            .order-info .total-price { font-size: 18px; }
-            .btn-red { padding: 10px 18px; font-size: 13px; }
+            .order-info .total-price { font-size: 16px; }
+            .btn-red { padding: 10px 16px; font-size: 12px; }
+            .menu-grid { padding: 0 4% 130px 4%; gap: 15px; }
         }
     </style>
 </head>
@@ -279,29 +285,44 @@
             <p>Atur variasi bumbu, isi jumlah pesanan, masukkan keranjang, lalu kirim sekaligus!</p>
         </div>
 
-        <div class="menu-grid" id="menu-container"></div>
-
+        <!-- KERANJANG BELANJA SAJA (TIDAK ADA FORM DISINI) -->
         <div class="cart-summary-section">
             <div class="cart-box">
                 <h3>🛒 Keranjang Racikan Kamu:</h3>
                 <div id="cart-items-list" style="color: #ccc; font-size: 13px;"> Belum ada item yang ditambahkan ke keranjang. </div>
-                
-                <div class="cust-identity-form">
-                    <h4>📝 Data Informasi Pembeli:</h4>
-                    <div class="form-inputs-group">
-                        <input type="text" id="cust-name" placeholder="Masukkan Nama Kamu..." required>
-                        <input type="number" id="cust-wa" placeholder="No WhatsApp Aktif (Cth: 0812...)" required>
-                    </div>
-                </div>
             </div>
         </div>
 
+        <div class="menu-grid" id="menu-container"></div>
+
+        <!-- TOMBOL DI BAR BAWAH HANYA UNTUK MEMBUKA POP-UP FORM -->
         <div class="order-bar">
             <div class="order-info">
                 <div class="total-items" id="total-items">0 Item Terpilih</div>
                 <div class="total-price" id="total-price">Rp 0</div>
             </div>
-            <button class="btn-red" id="btn-kirim" onclick="kirimOrderan()">Kirim Pesanan</button>
+            <button class="btn-red" onclick="bukaPopupCheckout()">Checkout</button>
+        </div>
+    </div>
+
+    <!-- POP-UP (MODAL) FORM DATA PEMBELI -->
+    <div id="modal-checkout" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" onclick="tutupPopupCheckout()">&times;</span>
+            <h3>📝 Data Pemesan</h3>
+            <p>Lengkapi datamu di bawah ini biar pesanan bisa langsung disiapkan!</p>
+            
+            <div class="input-wrapper">
+                <label for="cust-name">Us</label>
+                <input type="text" id="cust-name" placeholder="Masukkan nama kamu..." required>
+            </div>
+            <div class="input-wrapper">
+                <label for="cust-wa">No.wa</label>
+                <input type="number" id="cust-wa" placeholder="Contoh: 08123456789" required>
+            </div>
+            
+            <!-- TOMBOL KIRIM PESANAN BENERAN ADA DI SINI -->
+            <button class="btn-red" id="btn-kirim" style="width: 100%; justify-content: center; margin-top: 10px; font-size: 14px;" onclick="kirimOrderan()">Kirim Pesanan Sekarang</button>
         </div>
     </div>
 
@@ -336,7 +357,6 @@
     </div>
 
     <script>
-        // PASTEKAN URL SPREADSHEET APPS SCRIPT KAMU DI SINI
         const URL_SERVER = "https://script.google.com/macros/s/AKfycbxW4ECGwsG8glyu_X4cwRC1rH45v9ukEuP1TEsrsLC4TdHtNtByC5ly7wVpKuvNJGqLAg/exec";
 
         const listProduk = [
@@ -345,7 +365,7 @@
             { id: 3, nama: "Cireng Special", hargaBase: 10000, gambar: "img/cireng.png", desc: "Cireng gurih renyah dengan baluran saus premium.", optLabel: "Pilihan Rasa", options: [{ text: "Chili Oil (Pedas Nampol)", hargaTambah: 0 }, { text: "Bumbu Rujak", hargaTambah: 0 }], level: false, type: "normal" },
             { id: 4, nama: "Tahu Kocek", hargaBase: 8000, gambar: "img/kocek.jpg", desc: "Tahu goreng gurih dipotong kecil dan dikocoek bersama cabai.", optLabel: "Level Pedas", options: [{ text: "Level 1", hargaTambah: 0 }, { text: "Level 2", hargaTambah: 0 }, { text: "Level 3", hargaTambah: 0 }, { text: "Level 4", hargaTambah: 0 }, { text: "Level 5", hargaTambah: 0 }], level: false, type: "normal" },
             { id: 5, nama: "Tempura Kocek", hargaBase: 8000, gambar: "img/tempura.jpg", desc: "Aneka jajanan pasar goreng dengan bumbu khas level pedas manis.", optLabel: "Level Pedas", options: [{ text: "Level 1", hargaTambah: 0 }, { text: "Level 2", hargaTambah: 0 }, { text: "Level 3", hargaTambah: 0 }], level: false, type: "normal" },
-            { id: 6, nama: "Paket Hemat Super", hargaBase: 7000, gambar: "img/pakethemat.png", desc: "Kombinasi makanan & minuman dingin, kenyang ramah kantong!", optLabel: "Pilih Paket", options: [{ text: "Paket Hemat Biasa (Mie Biasa + Minum)", hargaTambah: 0, overrideHarga: 7000 }, { text: "Paket Hemat Topping (Mie Topping + Minum)", hargaTambah: 0, overrideHarga: 10000 }], level: true, type: "paket" },
+            { id: 6, nama: "Paket Hemat Super", hargaBase: 7000, gambar: "img/pakethemat.png", desc: "Kombinasi makanan & minuman dingin, kenyang ramah kantong!", optLabel: "Pilih Paket", options: [{ text: "Paket Hemat Biasa (Mie Biasa + Minum)", hargaTambah: 0 }, { text: "Paket Hemat Topping (Mie Topping + Minum)", hargaTambah: 3000 }], level: true, type: "paket" },
             { id: 7, nama: "Minuman Segar Penawar", hargaBase: 3000, gambar: "img/MINUMAN.png", desc: "Pilihan es minuman manis favoritmu untuk meredakan sengatan pedas!", optLabel: "Pilih Minuman", options: [{ text: "Sweet Tea", hargaTambah: 0 }, { text: "Lemon Tea", hargaTambah: 0 }, { text: "Good Day", hargaTambah: 0 }, { text: "Chocolatos Coklat", hargaTambah: 0 }, { text: "Chocolatos Matcha", hargaTambah: 0 }, { text: "POP ICE", hargaTambah: 0, hasSubVariant: true, subVariants: ["Coklat", "Anggur", "Strobery", "Permen Karet", "Vanila Blue", "Durian", "Taro", "Melon", "Mangga", "Leci", "Vanila Latte", "Cookies and Cream"] }, { text: "NUTRISARI", hargaTambah: 0, hasSubVariant: true, subVariants: ["Cincau", "Jeruk", "Strobery", "Jeruk Nipis", "Semangka"] }], level: false, type: "minuman" }
         ];
 
@@ -378,6 +398,22 @@
             }
         }
 
+        function updateCardPrice(prodId) {
+            const p = listProduk.find(prod => prod.id === prodId);
+            const optSelect = document.getElementById(`opt-${prodId}`);
+            const priceSpan = document.getElementById(`price-display-${prodId}`);
+            
+            if (!p || !optSelect || !priceSpan) return;
+            
+            let currentPrice = p.hargaBase;
+            const selectedOpt = p.options[optSelect.value];
+            if (selectedOpt && selectedOpt.hargaTambah) {
+                currentPrice += selectedOpt.hargaTambah;
+            }
+            
+            priceSpan.innerText = `Rp ${currentPrice.toLocaleString('id-ID')}`;
+        }
+
         function renderMenu() {
             const container = document.getElementById('menu-container');
             container.innerHTML = "";
@@ -391,7 +427,7 @@
                         </select>
                     </div>` : '';
 
-                let changeEvent = p.type === "minuman" ? `onchange="handleMinumanChange(${p.id})"` : ``;
+                let changeEvent = `onchange="if(${p.type === 'minuman'}){ handleMinumanChange(${p.id}) }; updateCardPrice(${p.id});"`;
 
                 let optionHtml = `
                     <div class="control-group">
@@ -419,7 +455,7 @@
                         </div>
                         <div class="card-footer" style="flex-direction:column; align-items:stretch; gap:10px;">
                             <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <span class="price">Rp ${p.hargaBase.toLocaleString('id-ID')}</span>
+                                <span class="price" id="price-display-${p.id}">Rp ${p.hargaBase.toLocaleString('id-ID')}</span>
                             </div>
                             <button class="btn-red" style="padding: 8px 12px; font-size:12px; justify-content:center;" onclick="tambahKeKeranjang(${p.id})">+ Keranjang</button>
                         </div>
@@ -464,9 +500,7 @@
             let kalkulasiHarga = p.hargaBase;
             if (optSelect) {
                 const selectedOpt = p.options[optSelect.value];
-                if (p.type === "paket" && selectedOpt.overrideHarga !== undefined) {
-                    kalkulasiHarga = selectedOpt.overrideHarga;
-                } else if (selectedOpt.hargaTambah) {
+                if (selectedOpt.hargaTambah) {
                     kalkulasiHarga += selectedOpt.hargaTambah;
                 }
             }
@@ -523,6 +557,19 @@
             document.getElementById('total-price').innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
         }
 
+        // FUNGSI UNTUK MEMBUKA DAN MENUTUP POP-UP CHECKOUT
+        function bukaPopupCheckout() {
+            if (keranjangBelanja.length === 0) {
+                alert("Keranjang kamu masih kosong nih, rakit dan tambah menu dulu yuk!");
+                return;
+            }
+            document.getElementById('modal-checkout').style.display = 'flex';
+        }
+
+        function tutupPopupCheckout() {
+            document.getElementById('modal-checkout').style.display = 'none';
+        }
+
         function putarSuaraNotifikasi() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -538,17 +585,6 @@
                 gain1.connect(ctx.destination);
                 osc1.start(ctx.currentTime);
                 osc1.stop(ctx.currentTime + 0.3);
-
-                const osc2 = ctx.createOscillator();
-                const gain2 = ctx.createGain();
-                osc2.type = 'triangle';
-                osc2.frequency.setValueAtTime(1318.51, ctx.currentTime + 0.1);
-                gain2.gain.setValueAtTime(0.4, ctx.currentTime + 0.1);
-                gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-                osc2.connect(gain2);
-                gain2.connect(ctx.destination);
-                osc2.start(ctx.currentTime + 0.1);
-                osc2.stop(ctx.currentTime + 0.5);
             } catch (error) {}
         }
 
@@ -558,10 +594,7 @@
             const totalBayar = document.getElementById('total-price').innerText;
 
             if(!nama || !wa) {
-                alert("Tolong isi Nama dan nomor WhatsApp kamu di kolom keranjang dulu ya!"); return;
-            }
-            if(keranjangBelanja.length === 0) {
-                alert("Keranjang kamu kosong, rakit dan tambah menu dulu yuk!"); return;
+                alert("Tolong isi Us (Nama) dan No.wa kamu dulu ya!"); return;
             }
 
             const btn = document.getElementById('btn-kirim');
@@ -589,12 +622,13 @@
                 document.getElementById('cust-wa').value = "";
                 keranjangBelanja = [];
                 updateTampilanKeranjang();
+                tutupPopupCheckout(); // Tutup popup setelah berhasil kirim
             })
             .catch(err => {
-                alert("Ada gangguan jaringan, pastikan setelan langkah server Google Sheets sudah benar.");
+                alert("Ada gangguan jaringan, pastikan server Google Sheets sudah benar.");
             })
             .finally(() => {
-                btn.innerText = "Kirim Pesanan";
+                btn.innerText = "Kirim Pesanan Sekarang";
                 btn.disabled = false;
             });
         }
