@@ -87,6 +87,13 @@
         }
         .btn-wa:hover { background-color: #1ebe57; transform: scale(1.05); }
 
+        .btn-selesai {
+            background-color: #ffaa00; color: #000; padding: 6px 12px;
+            border: none; border-radius: 4px; font-size: 11px; font-weight: 700;
+            cursor: pointer; transition: 0.2s;
+        }
+        .btn-selesai:hover { background-color: #ffcc00; transform: scale(1.05); }
+
         /* --- PAGE: BERANDA --- */
         .hero { display: flex; align-items: center; justify-content: space-between; padding: 40px 8%; gap: 30px; }
         .hero-text { flex: 1; }
@@ -300,7 +307,6 @@
             <p>Atur variasi bumbu, isi jumlah pesanan, masukkan keranjang, lalu kirim sekaligus!</p>
         </div>
 
-        <!-- FITUR BARU: BOX PETUNJUK MENGARAHKAN ALUR PEMBELI -->
         <div class="guide-box">
             <div class="guide-title">💡 CARA PESAN DI WEB PLEKYYY WAWW!:</div>
             <ul class="guide-steps">
@@ -311,7 +317,6 @@
             </ul>
         </div>
 
-        <!-- KERANJANG BELANJA SAJA (TIDAK ADA FORM DISINI) -->
         <div class="cart-summary-section">
             <div class="cart-box">
                 <h3>🛒 Keranjang Racikan Kamu:</h3>
@@ -321,7 +326,6 @@
 
         <div class="menu-grid" id="menu-container"></div>
 
-        <!-- TOMBOL DI BAR BAWAH HANYA UNTUK MEMBUKA POP-UP FORM -->
         <div class="order-bar">
             <div class="order-info">
                 <div class="total-items" id="total-items">0 Item Terpilih</div>
@@ -331,7 +335,6 @@
         </div>
     </div>
 
-    <!-- POP-UP (MODAL) FORM DATA PEMBELI (SUDAH DITAMBAH CATATAN) -->
     <div id="modal-checkout" class="modal-overlay">
         <div class="modal-content">
             <span class="close-modal" onclick="tutupPopupCheckout()">&times;</span>
@@ -347,13 +350,11 @@
                 <input type="number" id="cust-wa" placeholder="Contoh: 08123456789" required>
             </div>
             
-            <!-- FITUR BARU: INPUT CATATAN TAMBAHAN -->
             <div class="input-wrapper">
                 <label for="cust-note">Catatan Tambahan (Opsional)</label>
                 <textarea id="cust-note" rows="3" placeholder="Contoh: Gak pake daun bawang / Level 5 pedes beneran ya kak..." style="resize: none;"></textarea>
             </div>
             
-            <!-- TOMBOL KIRIM PESANAN BENERAN ADA DI SINI -->
             <button class="btn-red" id="btn-kirim" style="width: 100%; justify-content: center; margin-top: 10px; font-size: 14px;" onclick="kirimOrderan()">Kirim Pesanan Sekarang</button>
         </div>
     </div>
@@ -381,7 +382,7 @@
                         <th>Detail Pesanan Masuk</th>
                         <th>Catatan Khusus</th>
                         <th>Total Pembayaran</th>
-                        <th>Status</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="dashboard-rows"></tbody>
@@ -390,16 +391,16 @@
     </div>
 
     <script>
-        const URL_SERVER = "https://script.google.com/macros/s/AKfycbxW4ECGwsG8glyu_X4cwRC1rH45v9ukEuP1TEsrsLC4TdHtNtByC5ly7wVpKuvNJGqLAg/exec";
+        const URL_SERVER = "https://script.google.com/macros/s/AKfycbyvJISRC14mtBQhyKlZisFZAeP14W0b7a1aK4eUHwEswAbTt8_SO8JGPgoFODLfLdQBgg/exec";
 
         const listProduk = [
-            { id: 1, nama: "Mie Jebew Gila", hargaBase: 10000, gambar: "img/jebew.jpg", desc: "Mie khas pedas manis basah dengan minyak cabai melimpah.", optLabel: "Spesial Topping", options: [{ text: "Tanpa Topping", hargaTambah: 0 }, { text: "Sosis (+Rp 2.000)", hargaTambah: 2000 }, { text: "Bakso (+Rp 3.000)", hargaTambah: 3000 }, { text: "Pangsit (+Rp 3.000)", hargaTambah: 3000 }], level: true, type: "normal" },
-            { id: 2, nama: "Baso Aci Kuah Pedas", hargaBase: 12000, gambar: "img/baso aci.jpg", desc: "Baso aci lengkap dengan kuah pedas gurih, pilus cikur.", optLabel: "Rasa", options: [{ text: "Original", hargaTambah: 0 }, { text: "Ekstra Gurih", hargaTambah: 0 }], level: true, type: "normal" },
+            { id: 1, nama: "Mie Jebew Gila", hargaBase: 7000, gambar: "img/jebew.jpg", desc: "Mie khas pedas manis basah dengan minyak cabai melimpah.", optLabel: "Spesial Topping", options: [{ text: "Tanpa Topping", hargaTambah: 0 }, { text: "Sosis (+Rp 5.000)", hargaTambah: 5000 }, { text: "Bakso (+Rp 4.000)", hargaTambah: 4000 }, { text: "Pangsit (+Rp 2.000)", hargaTambah: 2000 }], level: true, type: "normal" },
+            { id: 2, nama: "Baso Aci Kuah Pedas", hargaBase: 8000, gambar: "img/baso aci.jpg", desc: "Baso aci lengkap dengan kuah pedas gurih, pilus cikur.", optLabel: "Rasa", options: [{ text: "Original", hargaTambah: 0 }, { text: "Ekstra Gurih", hargaTambah: 0 }], level: true, type: "normal" },
             { id: 3, nama: "Cireng Special", hargaBase: 10000, gambar: "img/cireng.png", desc: "Cireng gurih renyah dengan baluran saus premium.", optLabel: "Pilihan Rasa", options: [{ text: "Chili Oil (Pedas Nampol)", hargaTambah: 0 }, { text: "Bumbu Rujak", hargaTambah: 0 }], level: false, type: "normal" },
-            { id: 4, nama: "Tahu Kocek", hargaBase: 8000, gambar: "img/kocek.jpg", desc: "Tahu goreng gurih dipotong kecil dan dikocoek bersama cabai.", optLabel: "Level Pedas", options: [{ text: "Level 1", hargaTambah: 0 }, { text: "Level 2", hargaTambah: 0 }, { text: "Level 3", hargaTambah: 0 }, { text: "Level 4", hargaTambah: 0 }, { text: "Level 5", hargaTambah: 0 }], level: false, type: "normal" },
-            { id: 5, nama: "Tempura Kocek", hargaBase: 8000, gambar: "img/tempura.jpg", desc: "Aneka jajanan pasar goreng dengan bumbu khas level pedas manis.", optLabel: "Level Pedas", options: [{ text: "Level 1", hargaTambah: 0 }, { text: "Level 2", hargaTambah: 0 }, { text: "Level 3", hargaTambah: 0 }], level: false, type: "normal" },
+            { id: 4, nama: "Tahu Kocek", hargaBase: 5000, gambar: "img/kocek.jpg", desc: "Tahu goreng gurih dipotong kecil dan dikocoek bersama cabai.", optLabel: "Level Pedas", options: [{ text: "Level 1", hargaTambah: 0 }, { text: "Level 2", hargaTambah: 0 }, { text: "Level 3", hargaTambah: 0 }, { text: "Level 4", hargaTambah: 0 }, { text: "Level 5", hargaTambah: 0 }], level: false, type: "normal" },
+            { id: 5, nama: "Tempura Kocek", hargaBase: 5000, gambar: "img/tempura.jpg", desc: "Aneka jajanan pasar goreng dengan bumbu khas level pedas manis.", optLabel: "Level Pedas", options: [{ text: "Level 1", hargaTambah: 0 }, { text: "Level 2", hargaTambah: 0 }, { text: "Level 3", hargaTambah: 0 }], level: false, type: "normal" },
             { id: 6, nama: "Paket Hemat Super", hargaBase: 7000, gambar: "img/pakethemat.png", desc: "Kombinasi makanan & minuman dingin, kenyang ramah kantong!", optLabel: "Pilih Paket", options: [{ text: "Paket Hemat Biasa (Mie Biasa + Minum)", hargaTambah: 0 }, { text: "Paket Hemat Topping (Mie Topping + Minum)", hargaTambah: 3000 }], level: true, type: "paket" },
-            { id: 7, nama: "Minuman Segar Penawar", hargaBase: 3000, gambar: "img/MINUMAN.png", desc: "Pilihan es minuman manis favoritmu untuk meredakan sengatan pedas!", optLabel: "Pilih Minuman", options: [{ text: "Sweet Tea", hargaTambah: 0 }, { text: "Lemon Tea", hargaTambah: 0 }, { text: "Good Day", hargaTambah: 0 }, { text: "Chocolatos Coklat", hargaTambah: 0 }, { text: "Chocolatos Matcha", hargaTambah: 0 }, { text: "POP ICE", hargaTambah: 0, hasSubVariant: true, subVariants: ["Coklat", "Anggur", "Strobery", "Permen Karet", "Vanila Blue", "Durian", "Taro", "Melon", "Mangga", "Leci", "Vanila Latte", "Cookies and Cream"] }, { text: "NUTRISARI", hargaTambah: 0, hasSubVariant: true, subVariants: ["Cincau", "Jeruk", "Strobery", "Jeruk Nipis", "Semangka"] }], level: false, type: "minuman" }
+            { id: 7, nama: "Minuman Segar Penawar", hargaBase: 5000, gambar: "img/MINUMAN.png", desc: "Pilihan es minuman manis favoritmu untuk meredakan sengatan pedas!", optLabel: "Pilih Minuman", options: [{ text: "Sweet Tea", hargaTambah: 0 }, { text: "Lemon Tea", hargaTambah: 0 }, { text: "Good Day", hargaTambah: 0 }, { text: "Chocolatos Coklat", hargaTambah: 0 }, { text: "Chocolatos Matcha", hargaTambah: 0 }, { text: "POP ICE", hargaTambah: 0, hasSubVariant: true, subVariants: ["Coklat", "Anggur", "Strobery", "Permen Karet", "Vanila Blue", "Durian", "Taro", "Melon", "Mangga", "Leci", "Vanila Latte", "Cookies and Cream"] }, { text: "NUTRISARI", hargaTambah: 0, hasSubVariant: true, subVariants: ["Cincau", "Jeruk", "Strobery", "Jeruk Nipis", "Semangka"] }], level: false, type: "minuman" }
         ];
 
         let keranjangBelanja = [];
@@ -642,7 +643,7 @@
                 nama: nama,
                 wa: formattedWa,
                 items: itemDetails,
-                note: catatan, // Menyertakan data catatan ke server
+                note: catatan, 
                 total: totalBayar
             };
 
@@ -651,7 +652,6 @@
                 body: JSON.stringify(payload)
             })
             .then(res => {
-                // Generate format pesan teks rapi untuk dikirim ke chat WA owner juga (jika dibutuhkan oleh pembeli)
                 alert("Pesanan kamu berhasil terkirim ke sistem! Silakan tunggu konfirmasi penjual.");
                 document.getElementById('cust-name').value = "";
                 document.getElementById('cust-wa').value = "";
@@ -691,6 +691,7 @@
         }
 
         let totalDataLama = 0;
+        
         function ambilDataTerbaru() {
             if(document.getElementById('admin-dashboard-view').style.display === 'none') return;
 
@@ -710,25 +711,46 @@
                     return;
                 }
 
-                data.reverse().forEach((order, idx) => {
-                    // Jika data catatan kosong dari server lama, set default strip
-                    const txtNote = order.note ? order.note : "-";
+                data.reverse().forEach((order) => {
+                    const txtNote = order.catatan ? order.catatan : "-";
                     const row = `
                         <tr>
-                            <td>#00${data.length - idx}</td>
+                            <td>#00${order.rowNumber - 1}</td>
                             <td><b>${order.nama}</b></td>
                             <td>
-                                <a href="https://wa.me/${order.wa}?text=Halo%20${order.nama},%20pesanan%20Mie%20Jebew%20kamu%20sedang%20diproses%20ya!%20🌶️" target="_blank" class="btn-wa">
+                                <a href="https://wa.me/${order.wa}?text=Halo%20${order.nama},%20pesanan%20Mie%20Jebew%20kamu%20sedang%20diproses%20ya!%20🌶️" target="_blank" class="btn-wa" style="margin-right: 5px;">
                                     Chat Pembeli
                                 </a>
                             </td>
                             <td>${order.items}</td>
                             <td style="color:#ffcc00; font-style:italic; font-size:13px;">${txtNote}</td>
                             <td style="color: var(--accent-gold); font-weight:700;">${order.total}</td>
-                            <td><span class="status-badge">Menunggu Pembayaran</span></td>
+                            <td>
+                                <button class="btn-selesai" onclick="selesaikanPesanan(${order.rowNumber})">Selesai Diambil</button>
+                            </td>
                         </tr>`;
                     tbody.innerHTML += row;
                 });
+            });
+        }
+
+        function selesaikanPesanan(rowNum) {
+            if(!confirm("Yakin pesanan ini sudah diambil dan ingin dihapus dari monitor?")) return;
+
+            fetch(URL_SERVER, {
+                method: "POST",
+                body: JSON.stringify({
+                    action: "selesai",
+                    row: rowNum
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert("Pesanan berhasil diselesaikan!");
+                ambilDataTerbaru(); // Refresh tabel langsung tanpa reload halaman
+            })
+            .catch(err => {
+                alert("Gagal memperbarui status. Cek koneksi atau kode Web App.");
             });
         }
 
